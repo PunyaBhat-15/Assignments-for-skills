@@ -5,8 +5,12 @@
    switch(choice){
        case 1:printf("Enter amount: ");
               scanf("%d",&amount);
+              if(amount>total_amt){
               total_amt=total_amt-amount;
-              printf("Transaction Successful. Remaining Balance: %d",total_amt);
+              printf("Transaction Successful. Remaining Balance: %d",total_amt);}
+              else{
+               printf("insuffiecient amount\n");
+              }
               break;
         case 2:printf("Enter amount: ");
                scanf("%d",&amount);
