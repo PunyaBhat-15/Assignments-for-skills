@@ -22,5 +22,6 @@ int main(){
     
     printf("Enter Monthly Salary: ");
     scanf("%d", &monthly_salary);
+     eligiblecalculation( age,health_condition[], monthly_salary);
     return 0;
 }
