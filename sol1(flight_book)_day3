@@ -1,0 +1,86 @@
+1. Flight Ticket Booking System`
+`Scenario:`
+A travel agency wants to `store the details of N passengers` (Name, Age, Destination).
+The system should allow:
+Adding a `new passenger`
+`Sorting` passengers by `destination name (A-Z)`
+Searching for passengers traveling to a specific destination
+Use `arrays` and implement `sorting and searching techniques`.
+
+`Input Example:`
+```
+Enter number of passengers: 3
+Passenger 1: Alice, 30, Delhi
+Passenger 2: Bob, 25, Mumbai
+Passenger 3: Charlie, 40, Chennai
+
+Sorted List (by destination):
+Charlie
+Chennai
+Alice
+Delhi
+Bob
+Mumbai
+Enter destination to search: Mumbai
+Passengers traveling to Mumbai: Bob
+```
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    char name[50];
+    int age;
+    char destination[50];
+} P;  // Structure named P
+//The outer loop runs n-1 times since the last element will already be in place.
+//The inner loop (j) runs fewer times in each pass because the largest elements move to the end.
+void sortPassengers(P passenger[], int n) {
+    for (int i = 0; i < n - 1; i++) {  
+        for (int j = 0; j < n - i - 1; j++) {  
+            if (strcmp(passenger[j].destination, passenger[j + 1].destination) > 0) //compares strings alphabetically using ASCII values.{  
+                P temp = passenger[j];
+                passenger[j] = passenger[j + 1];
+                passenger[j + 1] = temp;
+            }
+        }
+    }
+}
+// searching by comapring each element
+void searchPassengers(P passenger[], int n, char searchDest[]) {
+    printf("Passengers traveling to %s:\n", searchDest);
+    for (int i = 0; i < n; i++) {
+        if (strcmp(passenger[i].destination, searchDest) == 0) {
+            printf("%s\n", passenger[i].name);
+        }
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter number of passengers: ");
+    scanf("%d", &n);
+    
+    P passenger[n];  // Array of structure P
+    
+    for (int i = 0; i < n; i++) {
+        printf("Passenger %d (Name, Age, Destination): ", i + 1);
+        scanf("%s %d %s", passenger[i].name, &passenger[i].age, passenger[i].destination);
+    }
+    
+    sortPassengers(passenger, n);
+    
+    printf("\nSorted List (by destination):\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s\n%s\n", passenger[i].name, passenger[i].destination);
+    }
+    
+    char searchDest[50];
+    printf("\nEnter destination to search: ");
+    scanf("%s", searchDest);
+    
+    searchPassengers(passenger, n, searchDest);
+    
+    return 0;
+}
