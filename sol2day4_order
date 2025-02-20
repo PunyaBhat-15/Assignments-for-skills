@@ -1,0 +1,114 @@
+2)`2. Online Shopping Order Processing`  
+`Scenario:`  
+An `online shopping system` records orders with `Order ID, Customer Name, Product, and Amount`. The system should:  
+- Store and update orders using `structures`  
+- Write order details to a `file`  
+- Allow `retrieval of order details`  
+
+`Input Example:`  
+```
+Enter number of orders: 2
+Order 1: 301, Alice, Laptop, ₹60000
+Order 2: 302, Bob, Mobile, ₹25000
+
+Enter Order ID to search: 301
+```
+
+`Output Example:`  
+```
+Order Found: Alice - Laptop - ₹60000
+Record saved in "orders.txt"
+```
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <string.h>
+
+struct Order {
+    int order_id;
+    char customer_name[80];
+    char product[80];
+    int amount;
+};
+typedef struct Order Order;
+
+void readOrders(Order orders[], int n);
+void printOrders(Order orders[], int n);
+void searchOrder(Order orders[], int n);
+void saveOrders(Order orders[], int n);
+void loadOrders(int n);
+
+int main() {
+    int n;
+    
+    printf("Enter the number of orders: ");
+    scanf("%d", &n);
+
+    Order orders[1000];
+
+    readOrders(orders, n);
+    printOrders(orders, n);
+    searchOrder(orders, n);
+    saveOrders(orders, n);
+    loadOrders(orders,n);
+    printf("Record saved in orders.txt");
+
+    return 0;
+}
+
+void readOrders(Order orders[], int n) {
+    for (int i = 0; i < n; i++) {
+        scanf("%d %s %s %d", &orders[i].order_id, orders[i].customer_name, orders[i].product, &orders[i].amount);
+    }
+}
+
+void printOrders(Order orders[], int n) {
+    printf("\nOrder Details:\n");
+    printf("OrderID\tCustomer\tProduct\tAmount\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d\t%s\t%s\t₹%d\n", orders[i].order_id, orders[i].customer_name, orders[i].product, orders[i].amount);
+    }
+}
+
+void searchOrder(Order orders[], int n) {
+    int search_id;
+    printf("\nEnter Order ID to search: ");
+    scanf("%d", &search_id);
+
+    for (int i = 0; i < n; i++) {
+        if (orders[i].order_id == search_id) {
+            printf("Order Found: %s - %s - ₹%d\n", orders[i].customer_name, orders[i].product, orders[i].amount);
+            return;
+        }
+    }
+    printf("Order Not Found!\n");
+}
+
+void saveOrders(Order orders[], int n) {
+    FILE *file = fopen("orders.txt", "w");
+    if (file == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%d %s %s %d\n", orders[i].order_id, orders[i].customer_name, orders[i].product, orders[i].amount);
+    }
+
+    fclose(file);
+}
+
+void loadOrders(int n) {
+    FILE *file = fopen("orders.txt", "r");
+    if (file == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < n; i++) {
+        fscanf(file, "%d %s %s %d",&orders[i].order_id, orders[i].customer_name, orders[i].product, &orders[i].amount);
+    }
+
+    fclose(file);
+}
