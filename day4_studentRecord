@@ -1,0 +1,118 @@
+1.`1. University Student Record Management`  
+`Scenario:`  
+A `university` maintains student records, 
+including `Roll No, Name, Course, and Marks`. 
+The system should:  
+- Store details using `structures`  
+- Save records to a `file`  
+- Allow searching for a `student by Roll No`  
+
+`Input Example:`  
+```
+Enter number of students: 3
+Student 1: 101, Alice, Computer Science, 85
+Student 2: 102, Bob, Mechanical, 90
+Student 3: 103, Charlie, Electrical, 78
+
+Enter Roll No to search: 102
+```
+
+`Output Example:`  
+```
+Student Found: Bob, Mechanical, Marks: 90
+Record saved in "students.txt"
+```
+
+
+
+
+
+#include <stdio.h>
+
+struct student_details {
+	int roll_no;
+	char name[80];
+	char course[80];
+	int marks;
+};
+typedef struct student_details d;
+void savedetails(d details[],int n);
+void loaddetails(d details[], int n);
+void searchElement(d details[],int n);
+void readDetails(d details[], int n);
+void printDetails(d details[], int n);
+
+int main() {
+	int n;
+	printf("Enter the number of students: ");
+
+	scanf("%d", &n);
+
+	d details[1000];
+
+	readDetails(details, n);
+	printDetails(details, n);
+	searchElement(details, n);
+   savedetails(details,n);
+    loaddetails(details,n);
+  printf("Student recorsd saved in students.txt");
+
+	return 0;
+}
+
+void readDetails(d details[], int n) {
+	for (int i = 0; i < n; i++) {
+		printf("Enter roll number, name, course, and marks of student %d:\n", i + 1);
+		scanf("%d %s %s %d", &details[i].roll_no, details[i].name, details[i].course, &details[i].marks);
+	}
+}
+
+void printDetails(d details[], int n) {
+	printf("RollNo\tName\tCourse\tMarks\n");
+	for (int i = 0; i < n; i++) {
+		printf("%d\t%s\t%s\t%d\n", details[i].roll_no, details[i].name, details[i].course, details[i].marks);
+
+	}
+}
+void searchElement(d details[],int n){
+    int element;
+    printf("Enter roll no: ");
+    scanf("%d",&element);
+    for(int i=0;i<n;i++){
+        if(details[i].roll_no==element){
+            printf("RollNo\tName\tCourse\tMarks\n");
+            printf("%d\t%s\t%s\t%d\n", details[i].roll_no, details[i].name, details[i].course, details[i].marks);
+            break;
+        }
+    }
+    
+}
+void savedetails(d details[],int n){
+    FILE* file=fopen("Students.txt","w");
+    //
+    if(file==NULL){
+        printf("error in creating file\n");
+        return;
+    }
+    //
+    for(int i=0;i<n;i++){
+        fprintf(file,"%d\t%s\t%s\t%d\n", details[i].roll_no, details[i].name, details[i].course, details[i].marks);
+    }
+    fclose(file);
+}
+    
+
+void loaddetails(d details[], int n){
+    FILE* file=fopen("Students.txt","r");
+    //
+    if(file==NULL){
+        printf("error in reading file\n");
+        return;
+    }
+    //
+    for(int i=0;i<n;i++){
+        fscanf(file,"%d %s %s %d", &details[i].roll_no, details[i].name, details[i].course, &details[i].marks);
+    }
+    fclose(file);
+    
+}
