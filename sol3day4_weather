@@ -1,0 +1,114 @@
+3.3. Weather Monitoring System`  
+`Scenario:`  
+A `weather station` records temperature and humidity 
+for `different cities`. The system should:  
+- Store records using `structures`  
+- Allow searching for `temperature of a specific city`  
+- Save data to a `file`  
+
+`Input Example:`  
+```
+Enter number of cities: 3
+City 1: Mumbai, 32°C, 80%
+City 2: Delhi, 38°C, 60%
+City 3: Chennai, 35°C, 75%
+
+Enter city name to search: Delhi
+```
+
+`Output Example:`  
+```
+Weather in Delhi: 38°C, 60% Humidity
+Data saved in "weather_data.txt"
+```
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+struct Weather {
+    char city[80];
+    int temperature;
+    int humidity;
+};
+typedef struct Weather Weather;
+
+void readWeatherData(Weather records[], int n);
+void printWeatherData(Weather records[], int n);
+void searchCityWeather(Weather records[], int n);
+void saveWeatherData(Weather records[], int n);
+void loadWeatherData(Weather records[],int n);
+
+int main() {
+    int n;
+
+    printf("Enter number of cities: ");
+    scanf("%d", &n);
+
+    Weather records[1000];
+
+    readWeatherData(records, n);
+    printWeatherData(records, n);
+    searchCityWeather(records, n);
+    saveWeatherData(records, n);
+    loadWeatherData(records,n);
+    printf("Data saved in weather_data.txt");
+    return 0;
+}
+
+void readWeatherData(Weather records[], int n) {
+    for (int i = 0; i < n; i++) {
+        scanf("%s %d %d", records[i].city, &records[i].temperature, &records[i].humidity);
+    }
+}
+
+void printWeatherData(Weather records[], int n) {
+    printf("\nWeather Data:\n");
+    printf("City\tTemperature\tHumidity\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s\t%d°C\t\t%d%%\n", records[i].city, records[i].temperature, records[i].humidity);
+    }
+}
+
+void searchCityWeather(Weather records[], int n) {
+    char search_city[80];
+    printf("\nEnter city name to search: ");
+    scanf("%s", search_city);
+
+    for (int i = 0; i < n; i++) {
+        if (strcmp(records[i].city, search_city) == 0) {
+            printf("Weather in %s: %d°C, %d%% Humidity\n", records[i].city, records[i].temperature, records[i].humidity);
+            return;
+        }
+    }
+    printf("City Not Found!\n");
+}
+
+void saveWeatherData(Weather records[], int n) {
+    FILE *file = fopen("weather_data.txt", "w");
+    if (file == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%s %d %d\n", records[i].city, records[i].temperature, records[i].humidity);
+    }
+
+    fclose(file);
+}
+
+void loadWeatherData(Weather records[],int n) {
+    FILE *file = fopen("weather_data.txt", "r");
+    if (file == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < n; i++) {
+        fscanf(file, "%s %d %d", records[i].city, &records[i].temperature, &records[i].humidity);
+    }
+
+    fclose(file);
+}
