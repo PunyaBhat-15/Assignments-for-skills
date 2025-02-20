@@ -39,7 +39,7 @@ void readOrders(Order orders[], int n);
 void printOrders(Order orders[], int n);
 void searchOrder(Order orders[], int n);
 void saveOrders(Order orders[], int n);
-void loadOrders(int n);
+void loadOrdersOrder orders[],int n);
 
 int main() {
     int n;
@@ -100,7 +100,7 @@ void saveOrders(Order orders[], int n) {
     fclose(file);
 }
 
-void loadOrders(int n) {
+void loadOrders(Order orders[],int n) {
     FILE *file = fopen("orders.txt", "r");
     if (file == NULL) {
         return;
