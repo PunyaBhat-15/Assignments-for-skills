@@ -1,0 +1,198 @@
+2.Seat confirmation
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_SEATS 2  // Maximum confirmed bookings
+#define MAX_WAITLIST 2 // Maximum waiting list size
+
+typedef struct {
+    char name[50];
+} Passenger;
+
+Passenger confirmed[MAX_SEATS];
+Passenger waitlist[MAX_WAITLIST];
+
+int confirmed_count = 0;
+int waitlist_count = 0;
+
+// Function to book a ticket
+void bookTicket(char name[]) {
+    if (confirmed_count < MAX_SEATS) {
+        strcpy(confirmed[confirmed_count].name, name);
+        printf("Booking Confirmed: Passenger %d (%s)\n", confirmed_count + 1, name);
+        confirmed_count++;
+    } else if (waitlist_count < MAX_WAITLIST) {
+        strcpy(waitlist[waitlist_count].name, name);
+        printf("Waiting List: Passenger %d (%s)\n", waitlist_count + 1, name);
+        waitlist_count++;
+    } else {
+        printf("Sorry, no available seats. Waiting list is full!\n");
+    }
+}
+
+// Function to display confirmed bookings
+void displayConfirmed() {
+    printf("\nConfirmed Bookings:\n");
+    for (int i = 0; i < confirmed_count; i++) {
+        printf("%d. %s\n", i + 1, confirmed[i].name);
+    }
+}
+
+// Function to display waiting list
+void displayWaitlist() {
+    printf("\nWaiting List:\n");
+    for (int i = 0; i < waitlist_count; i++) {
+        printf("%d. %s\n", i + 1, waitlist[i].name);
+    }
+}
+
+// Function to cancel a ticket (removes first passenger and moves waiting list up)
+void cancelTicket() {
+    if (confirmed_count == 0) {
+        printf("No confirmed bookings to cancel.\n");
+        return;
+    }
+    
+    printf("Ticket Canceled: %s\n", confirmed[0].name);
+
+    // Shift confirmed bookings
+    for (int i = 0; i < confirmed_count - 1; i++) {
+        confirmed[i] = confirmed[i + 1];
+    }
+    confirmed_count--;
+
+    // Move first waitlist passenger to confirmed
+    if (waitlist_count > 0) {
+        strcpy(confirmed[confirmed_count].name, waitlist[0].name);
+        printf("Booking Confirmed from Waitlist: %s\n", waitlist[0].name);
+        confirmed_count++;
+
+        // Shift waiting list
+        for (int i = 0; i < waitlist_count - 1; i++) {
+            waitlist[i] = waitlist[i + 1];
+        }
+        waitlist_count--;
+    }
+}
+
+int main() {
+    bookTicket("Alice");
+    bookTicket("Bob");
+    bookTicket("Charlie");
+    bookTicket("David");
+    bookTicket("Eve");
+
+    displayConfirmed();
+    displayWaitlist();
+
+    printf("\nCanceling a ticket...\n");
+    cancelTicket();
+
+    displayConfirmed();
+    displayWaitlist();
+
+return 0;
+}
+3.hospital management
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Patient {
+    int id;
+    char name[50];
+    struct Patient* prev;
+    struct Patient* next;
+} Patient;
+
+Patient* createPatient(int id, char* name) {
+    Patient* newPatient = (Patient*)malloc(sizeof(Patient));
+    newPatient->id = id;
+    strcpy(newPatient->name, name);
+    newPatient->prev = NULL;
+    newPatient->next = NULL;
+    return newPatient;
+}
+
+typedef struct PatientList {
+    Patient* head;
+    Patient* tail;
+} PatientList;
+
+PatientList* createPatientList() {
+    PatientList* list = (PatientList*)malloc(sizeof(PatientList));
+    list->head = NULL;
+    list->tail = NULL;
+    return list;
+}
+
+void addPatient(PatientList* list, int id, char* name) {
+    Patient* newPatient = createPatient(id, name);
+    if (list->head == NULL) {
+        list->head = list->tail = newPatient;
+    } else {
+        list->tail->next = newPatient;
+        newPatient->prev = list->tail;
+        list->tail = newPatient;
+    }
+    printf("New Patient Admitted: %s (ID %d)\n", name, id);
+}
+
+void removePatient(PatientList* list, int id) {
+    Patient* current = list->head;
+    while (current != NULL && current->id != id) {
+        current = current->next;
+    }
+    if (current == NULL) {
+        printf("Patient with ID %d not found.\n", id);
+        return;
+    }
+    if (current->prev != NULL) {
+        current->prev->next = current->next;
+    } else {
+        list->head = current->next;
+    }
+    if (current->next != NULL) {
+        current->next->prev = current->prev;
+    } else {
+        list->tail = current->prev;
+    }
+    printf("Discharging: %s\n", current->name);
+    free(current);
+}
+
+void printPatients(PatientList* list) {
+    Patient* current = list->head;
+    printf("Remaining Patients: ");
+    while (current != NULL) {
+        printf("%s", current->name);
+        if (current->next != NULL) {
+            printf(" ↔ ");
+        }
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    PatientList* list = createPatientList();
+
+    // Adding patients
+    addPatient(list, 201, "John");
+    addPatient(list, 202, "Mary");
+    addPatient(list, 203, "David");
+
+    // Removing a patient
+    removePatient(list, 202);
+
+    // Print remaining patients
+    printPatients(list);
+
+    // Free allocated memory
+    while (list->head != NULL) {
+        removePatient(list, list->head->id);
+    }
+    free(list);
+
+    return 0;
+}
