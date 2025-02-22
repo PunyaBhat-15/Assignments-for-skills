@@ -1,3 +1,92 @@
+1.#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_CALLS 100
+
+typedef struct {
+    int call_id;
+    char customer_name[50];
+} Call;
+
+typedef struct {
+    Call calls[MAX_CALLS];
+    int front;
+    int rear;
+} CallQueue;
+
+void initialize_queue(CallQueue* queue) {
+    queue->front = -1;
+    queue->rear = -1;
+}
+
+int is_empty(CallQueue* queue) {
+    return queue->front == -1;
+}
+
+int is_full(CallQueue* queue) {
+    return queue->rear == MAX_CALLS - 1;
+}
+
+void add_call(CallQueue* queue, int call_id, const char* customer_name) {
+    if (is_full(queue)) {
+        printf("Queue is full. Cannot add new call.\n");
+        return;
+    }
+   
+    if (is_empty(queue)) {
+        queue->front = 0;
+    }
+   
+    queue->rear++;
+    queue->calls[queue->rear].call_id = call_id;
+    strcpy(queue->calls[queue->rear].customer_name, customer_name);
+    printf("New Call Added: Call %d from %s\n", call_id, customer_name);
+}
+
+void process_call(CallQueue* queue) {
+    if (is_empty(queue)) {
+        printf("No calls to process\n");
+        return;
+    }
+   
+    printf("Processing Call: %d from %s\n", queue->calls[queue->front].call_id, queue->calls[queue->front].customer_name);
+   
+    if (queue->front == queue->rear) {
+        queue->front = queue->rear = -1;
+    } else {
+        queue->front++;
+    }
+}
+
+void display_remaining_calls(CallQueue* queue) {
+    if (is_empty(queue)) {
+        printf("No remaining calls\n");
+        return;
+    }
+   
+    printf("Remaining Calls:");
+    for (int i = queue->front; i <= queue->rear; i++) {
+        printf("%d from %s\n", queue->calls[i].call_id, queue->calls[i].customer_name);
+    }
+}
+
+int main() {
+    CallQueue queue;
+    initialize_queue(&queue);
+   
+    add_call(&queue, 101, "Alice");
+    add_call(&queue, 102, "Bob");
+    process_call(&queue);
+    display_remaining_calls(&queue);
+   
+    return 0;
+}
+
+
+
+
+
 2.Seat confirmation
 #include <stdio.h>
 #include <string.h>
