@@ -1,0 +1,82 @@
+1.
+
+#include<stdio.h>
+#include<string.h>
+struct movies{
+       char movies[50];
+       float rate;
+};
+typedef struct movies m;
+
+void readdata(m detail[],int n);
+void printdata(m detail[],int n);
+void sortingdata(m detail[],int n);
+void searchingdata(m detail[],int n);
+
+int main()
+{
+       m detail[100];
+       int n;
+       printf("enter the number of people: ");
+       scanf("%d",&n);
+       readdata(detail,n);
+       printdata(detail,n);
+       sortingdata(detail,n);
+       searchingdata(detail,n);
+       return 0;
+
+     
+
+       
+}
+void readdata(m detail[],int n){
+       int i;
+       for( i=0;i<n;i++){
+        printf("enter the details of movie %d:\n",i+1);
+       scanf("%s %f",detail[i].movies,&detail[i].rate);
+       }
+
+}
+void printdata(m detail[],int n){
+       int i;
+       printf("the data are:\n");
+       for(i=0;i<n;i++){
+              printf("Title:%s   Rating:%.2f\n",detail[i].movies,detail[i].rate);
+       }
+    
+
+}
+void sortingdata(m detail[],int n){
+       int i;
+       int j;
+       m temp;
+       printf("after sorting:\n");
+       for(i=0;i<n-1;i++){
+              for(j=i+1;j<n;j++){
+              if(detail[i].rate<detail[j].rate){
+                     temp=detail[j];
+                     detail[j]=detail[i];
+                     detail[i]=temp;
+              }
+
+              }
+       }
+       printf("the data are:\n");
+       for(i=0;i<n;i++){
+              printf("Title:%s   Rating:%.2f\n",detail[i].movies,detail[i].rate);
+       }
+     
+       
+}
+void searchingdata(m detail[],int n){
+       char searchs[60];
+       int i;
+       printf("enter movie to search:\n");
+       scanf("%s",searchs);
+       for(i=0;i<n;i++){
+              if(strcmp(detail[i].movies,searchs)==0)
+              printf("found:Title:%s   Rating:%.2f\n",detail[i].movies,detail[i].rate);
+
+       }
+       
+}
